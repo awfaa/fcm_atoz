@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "893873919668",
+    "project_id": "fcm-atoz",
+    "storage_bucket": "fcm-atoz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893873919668:android:68bc28e7f4751c96a5a9e1",
+        "android_client_info": {
+          "package_name": "com.example.fcm_atoz"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOMYcy5UL69Mgyr7QDrD_HIGFaYAAZr-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
