@@ -1,6 +1,8 @@
 import 'package:fcm_atoz/components/button.dart';
 import 'package:fcm_atoz/components/text_field.dart';
+import 'package:fcm_atoz/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -17,7 +19,31 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmPassController = TextEditingController();
 
   //sign up user
-  void signUp() {}
+  void signUp() async {
+    if (passController.text != confirmPassController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Passwords do not match"),
+        ),
+      );
+      //show error
+      return;
+    }
+
+    // get auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    try {
+      await authService.createUserWithEmailAndPassword(
+          emailController.text, passController.text);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
