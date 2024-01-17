@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fcm_atoz/home_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fcm_atoz/home_screen.dart'; // Import HomeScreen
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,7 +11,7 @@ class AuthService {
       stream: _auth.authStateChanges(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
-          return HomeScreen();
+          return HomeScreen(); // Navigate to HomeScreen directly
         } else {
           return SignInScreen();
         }
@@ -18,14 +19,25 @@ class AuthService {
     );
   }
 
-  // Sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await _storeUserDataInFirestore();
     } catch (e) {
       print("Error signing in: $e");
     }
   }
+
+  Future<void> _storeUserDataInFirestore() async {
+    final User? user = _auth.currentUser;
+    await FirebaseFirestore.instance.collection('users').doc(user?.uid).set({
+      'email': user?.email,
+      'created': FieldValue.serverTimestamp(),
+      // Add more user data as needed
+    });
+  }
+
+  
 }
 
 class SignInScreen extends StatefulWidget {

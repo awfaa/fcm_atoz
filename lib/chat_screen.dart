@@ -115,12 +115,14 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController _messageController = TextEditingController();
   List<String> _messages = [];
 
-  List<String> _availableUsers = ['User1', 'User2', 'User3'];
-  String _selectedUser = 'User1'; // Initialize with a default user
+  List<String> _availableUsers = [];
+  String _selectedUser = ''; // Initialize with an empty string
 
   @override
   void initState() {
     super.initState();
+
+    _fetchUserData(); // Added to fetch user data from Firestore
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("onMessage: $message");
@@ -129,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print("onMessageOpenedApp: $message");
-      // Handle message when app is in the foreground
+      // Handle message when the app is in the foreground
       _handleIncomingMessage(message);
     });
 
@@ -140,6 +142,54 @@ class _ChatScreenState extends State<ChatScreen> {
 
     _user = _auth.currentUser;
     _currentUserId = _user!.uid;
+  }
+
+  void _fetchUserEmails() async {
+    try {
+      List<String> emails = [];
+
+      // Fetch user data directly from Firebase Authentication
+      await FirebaseAuth.instance.currentUser!.reload(); // Refresh user data
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        emails.add(user.email!); // Add the current user's email to the list
+      }
+
+      setState(() {
+        _availableUsers = emails;
+        if (_availableUsers.isNotEmpty) {
+          _selectedUser = _availableUsers[0];
+        }
+      });
+    } catch (e) {
+      print("Error fetching user emails: $e");
+    }
+  }
+
+  // New method to fetch user data from Firestore
+  Future<void> _fetchUserData() async {
+    try {
+      final User? user = _auth.currentUser;
+
+      // Fetch user data from Firestore
+      QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('uid', isNotEqualTo: user?.uid)
+          .get();
+
+      List<String> emails =
+          userSnapshot.docs.map((doc) => doc['email'] as String).toList();
+
+      setState(() {
+        _availableUsers = emails;
+        if (_availableUsers.isNotEmpty) {
+          _selectedUser = _availableUsers[0];
+        }
+      });
+    } catch (e) {
+      print("Error fetching user emails: $e");
+    }
   }
 
   void _handleIncomingMessage(RemoteMessage message) {
