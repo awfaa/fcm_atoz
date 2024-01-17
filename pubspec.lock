@@ -281,6 +281,7 @@ packages:
     source: hosted
     version: "1.10.0"
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   nested:
     dependency: transitive
     description:
@@ -289,6 +290,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
   path:
@@ -426,7 +429,11 @@ packages:
     version: "6.5.0"
 sdks:
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   dart: ">=3.2.0 <4.0.0"
+=======
+  dart: ">=3.2.0-194.0.dev <4.0.0"
+>>>>>>> Stashed changes
 =======
   dart: ">=3.2.0-194.0.dev <4.0.0"
 >>>>>>> Stashed changes
