@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // instance of auth
+  //instance of auth service
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //sign out
@@ -40,17 +40,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  //build a list of users for the current logged in user
+  //build user list
   Widget _buildUserList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance.collection('users').snapshots(),
       builder: (context, snapshot) {
-        if (!snapshot.hasError) {
-          return const Text('error');
+        if (snapshot.hasError) {
+          return const Text('Something went wrong');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text('Loading..');
+          return const Text("Loading");
         }
 
         return ListView(
@@ -63,22 +63,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildUserListItem(DocumentSnapshot document) {
-    Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     //display all users except current user
-    if (_auth.currentUser!.email != data['email']) {
+    if (_auth.currentUser!.email != data['email]']) {
       return ListTile(
-        title: data['email'],
+        title: Text(data['email']),
         onTap: () {
-          //navigate to chat screen
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ChatScreen(),
+              builder: (context) => ChatScreen(
+                receiverUserEmail: data['email'],
+                receiverUserID: data['uid'],
+              ),
             ),
           );
         },
       );
+    } else {
+      return Container();
     }
   }
 }
