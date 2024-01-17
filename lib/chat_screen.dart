@@ -46,6 +46,10 @@ class AuthService {
       print("Error signing in: $e");
     }
   }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
 }
 
 class SignInScreen extends StatefulWidget {
@@ -111,6 +115,9 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController _messageController = TextEditingController();
   List<String> _messages = [];
 
+  List<String> _availableUsers = ['User1', 'User2', 'User3'];
+  String _selectedUser = 'User1'; // Initialize with a default user
+
   @override
   void initState() {
     super.initState();
@@ -169,9 +176,33 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter FCM Chat'),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await _auth.signOut();
+            },
+            icon: Icon(Icons.exit_to_app),
+          ),
+        ],
       ),
       body: Column(
         children: [
+          // User selection dropdown
+          DropdownButton(
+            value: _selectedUser,
+            items: _availableUsers.map((user) {
+              return DropdownMenuItem(
+                value: user,
+                child: Text(user),
+              );
+            }).toList(),
+            onChanged: (value) {
+              setState(() {
+                _selectedUser = value.toString();
+                // Update UI or load chat messages for the selected user
+              });
+            },
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: _messages.length,
