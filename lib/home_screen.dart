@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading");
+          return const Text("Loading..");
         }
 
         return ListView(
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     //display all users except current user
-    if (_auth.currentUser!.email != data['email]']) {
+    if (_auth.currentUser!.email != data['email']) {
       return ListTile(
         title: Text(data['email']),
         onTap: () {
