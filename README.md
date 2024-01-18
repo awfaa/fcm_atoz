@@ -11,6 +11,7 @@ Sign Task for Group Member
 3. Najiha - register page, create firestore databse, chat screen, notifications, chat bubble
 # Firebase Cloud Messaging (FCM)
  
+A simple application to showcase messaging between users in through usage of firebase authentication and database.
 
 References 
 1. Add Firebase to your Flutter app. (n.d.). Firebase. https://firebase.google.com/docs/flutter/setup?platform=ios
